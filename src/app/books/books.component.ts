@@ -27,20 +27,25 @@ export class BooksComponent implements OnInit {
   }
 
   public onOpenModal(book: Books, mode: string): void {
+    const container =document.getElementById('main-container');
     const button = document.createElement("button");
     button.type = "button";
     button.style.display="none";
-    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-bs-toggle', 'modal');
 
     if(mode === "add") {
-      button.setAttribute('data-toggle', '#addBooksModal');
+      button.setAttribute('data-bs-target', '#addBookModal');
     }
     if(mode === "edit") {
-      button.setAttribute('data-toggle', '#updateBooksModal')
+      button.setAttribute('data-bs-target', '#updateBookModal')
     }
     if(mode === "delete") {
-      button.setAttribute('data-toggle', '#deleteBooksModal')
+      button.setAttribute('data-bs-target', '#deleteBookModal')
     }
+
+    container!.appendChild(button);
+    button.click;
+    console.log(button);
   }
 
   ngOnInit(): void {
