@@ -7,6 +7,7 @@ import { BooksComponent } from './books/books.component';
 import { HttpClientModule } from '@angular/common/http'
 import { BooksService } from './books/books.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
+    FormsModule,
   ],
   providers: [BooksService],
   bootstrap: [AppComponent]
