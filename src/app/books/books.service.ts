@@ -18,9 +18,10 @@ export class BooksService {
 
   public addBook(books: Books): Observable<any> {
     return this.http.post(`${this.apiServerUrl}/books`, books, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      // headers: {
+      //   'Access-Control-Allow-Origin': *,
+      //   'Content-Type': 'multipart/form-data'
+      // }
     });
   }
 
