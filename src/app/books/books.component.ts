@@ -14,7 +14,8 @@ import { BooksService } from './books.service';
 export class BooksComponent implements OnInit {
   // model: NgbDateStruct | undefined;
   public books: Books[] | undefined;
-  public imageFile: File | undefined;
+  public imageFile: any;
+  public imageLink: any;
 
 
   constructor(private bookService: BooksService) {
@@ -34,15 +35,22 @@ export class BooksComponent implements OnInit {
 
   public onChange(event: any){
     this.imageFile = (event.target.files[0]);
-    const blobFile = new Blob([event.target.files[0]], {
-      type: 'application/pdf'
-    });
+    // const blobFile = new Blob([event.target.files[0]], {
+    //   type: 'application/pdf'
+    // });
     console.log(this.imageFile);
+
+    let reader = new FileReader();
+    reader.readAsDataURL(this.imageFile);
+    reader.onload = (event) => {
+      this.imageLink = reader.result;
+      console.log(this.imageLink);
+    };
 
   }
 
   public onAddBook(addForm: NgForm): void {
-    console.log(addForm.value);
+    console.log(addForm);
 
     const publishedDate = new Date(
       addForm?.value?.publishedDate?.year,
@@ -50,14 +58,11 @@ export class BooksComponent implements OnInit {
       addForm?.value?.publishedDate?.day
       );
 
-    const formData = {...addForm.value}
+    const getFormData = {...addForm.value}
     const newFormData = {
-      ...formData,
+      ...getFormData,
       publishedDate: publishedDate,
-      cover: this.imageFile
     }
-
-    console.log(new Date(addForm?.value?.publishedDate?.year, addForm?.value?.publishedDate?.month -1, addForm?.value?.publishedDate?.day));
 
 
     this.bookService.addBook(newFormData).subscribe(
@@ -67,7 +72,7 @@ export class BooksComponent implements OnInit {
 
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        console.log(error.message);
       }
     );
   }
