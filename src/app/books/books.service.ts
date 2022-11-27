@@ -16,13 +16,18 @@ export class BooksService {
     return this.http.get(`${this.apiServerUrl}/books`)
   }
 
-  public addBook(books: Books): Observable<any> {
+  public Books addBook(books: Books): Observable<any> {
     return this.http.post(`${this.apiServerUrl}/books`, books, {
       // headers: {
       //   'Access-Control-Allow-Origin': *,
       //   'Content-Type': 'multipart/form-data'
       // }
     });
+  }
+
+
+  public updateBooks(books: Books): Observable<Books> {
+    return this.http.put<Books>(`${this.apiServerUrl}/Books/{id}`, books);
   }
 
 

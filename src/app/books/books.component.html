@@ -14,6 +14,7 @@
       </svg>
       Add Book
   </button>
+
   <div *ngFor="let book of books">
     <br>
     <div class="card mb-3" id="main-container">
@@ -24,7 +25,9 @@
           </div>
           <div class="text-center mt-2">
             <div class="btn-group" role="group">
-              <button class="btn btn-info" (click)="onOpenModal(book, 'edit')" >
+              <button class="btn btn-info"
+              type="button" data-bs-toggle="modal" data-bs-target="#updateBookModal"
+              (click)="onOpenModal(book, 'edit')" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                   <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                   <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -104,6 +107,93 @@
                 ngModel
                 name="publishedDate"
                 class="form-control"
+                placeholder="yyyy-mm-dd"
+                ngbDatepicker
+                #d="ngbDatepicker"
+              />
+              <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar3" viewBox="0 0 16 16">
+                  <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+                  <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label for="cover" class="form-label">Cover photo</label>
+            <input ngModel name="cover" (change)="onChange($event)" type="file" class="form-control" id="cover">
+          </div>
+
+          <div class="mb-2">
+            <label for="description" class="form-label">Description</label>
+            <textarea ngModel name="description" class="form-control" id="description" rows="3"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="add-book-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Update Book Modal -->
+<div class="modal fade" id="updateBookModal" tabindex="-1"
+type="button" data-bs-toggle="modal" data-bs-target="#updateBookModal"
+aria-labelledby="addBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Book</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddBook(addForm)">
+          <div class="mb-2">
+            <label for="title" class="form-label">Title</label>
+            <input ngModel name="title" type="text" class="form-control" id="title" placeholder="Book title">
+          </div>
+
+          <div class="mb-2">
+            <label for="author" class="form-label">Author</label>
+            <input ngModel name="author" type="text" class="form-control" id="author" placeholder="Author name">
+          </div>
+
+          <div class="mb-2">
+            <label for="genre" class="form-label">Genre</label>
+            <input ngModel name="genre" type="text" class="form-control" id="genre" placeholder="Book genre">
+          </div>
+
+          <div class="mb-2">
+            <label for="isbn" class="form-label">ISBN</label>
+            <input ngModel name="isbn" type="text" class="form-control" id="isbn" placeholder="Book ISBN No.">
+          </div>
+
+          <div class="mb-2">
+            <label for="rating" class="form-label">Rating</label>
+            <input ngModel name="rating" type="text" class="form-control" id="rating" placeholder="Book rating">
+          </div>
+
+          <div class="mb-2">
+            <label for="pages" class="form-label">Page</label>
+            <input ngModel name="pages" type="text" class="form-control" id="pages" placeholder="Total number of pages">
+          </div>
+
+          <div class="mb-2">
+            <label for="language" class="form-label">Language</label>
+            <input ngModel name="language" type="text" class="form-control" id="language" placeholder="Total number of pages">
+          </div>
+
+          <div class="mb-2">
+            <label for="publishedDate" class="form-label">Published Date</label>
+            <div class="input-group">
+              <input
+                ngModel
+                name="publishedDate"
+                class="form-control"
                 id="date"
                 placeholder="yyyy-mm-dd"
                 ngbDatepicker
@@ -129,29 +219,10 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="update-book-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Save</button>
           </div>
         </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--Update Book Modal -->
-<div class="modal fade" id="updateBookModal" tabindex="-1" aria-labelledby="updateBookModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Book</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>

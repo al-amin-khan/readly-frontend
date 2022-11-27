@@ -1,5 +1,5 @@
 import { formatDate, getLocaleDateFormat } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
@@ -18,7 +18,8 @@ export class BooksComponent implements OnInit {
   public imageLink: any;
 
 
-  constructor(private bookService: BooksService) {
+
+  constructor(private bookService: BooksService, private httpClient: HttpClient) {
     // this.books = [];
   }
 
@@ -52,6 +53,9 @@ export class BooksComponent implements OnInit {
   public onAddBook(addForm: NgForm): void {
     console.log(addForm);
 
+    const closeButton = document.getElementById("add-book-form") as  HTMLInputElement;
+    closeButton.click();
+
     const publishedDate = new Date(
       addForm?.value?.publishedDate?.year,
       addForm?.value?.publishedDate?.month -1,
@@ -78,7 +82,7 @@ export class BooksComponent implements OnInit {
   }
 
   public onOpenModal(book: Books, mode: string): void {
-    const container =document.getElementById('main-container');
+    const container = document.getElementById('main-container') as HTMLElement;
     const button = document.createElement("button");
     button.type = "button";
     button.style.display="none";
@@ -94,9 +98,9 @@ export class BooksComponent implements OnInit {
       button.setAttribute('data-bs-target', '#deleteBookModal')
     }
 
-    container!.appendChild(button);
+    container.appendChild(button);
     button.click;
-    console.log(button);
+    console.log(button, container);
   }
 
   ngOnInit(): void {
