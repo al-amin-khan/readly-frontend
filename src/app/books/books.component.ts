@@ -14,6 +14,8 @@ import { BooksService } from './books.service';
 export class BooksComponent implements OnInit {
   // model: NgbDateStruct | undefined;
   public books: Books[] | undefined;
+  public editBooks!: Books;
+  public deleteBooks!: Books;
   public imageFile: any;
   public imageLink: any;
 
@@ -53,9 +55,6 @@ export class BooksComponent implements OnInit {
   public onAddBook(addForm: NgForm): void {
     console.log(addForm);
 
-    const closeButton = document.getElementById("add-book-form") as  HTMLInputElement;
-    closeButton.click();
-
     const publishedDate = new Date(
       addForm?.value?.publishedDate?.year,
       addForm?.value?.publishedDate?.month -1,
@@ -68,8 +67,40 @@ export class BooksComponent implements OnInit {
       publishedDate: publishedDate,
     }
 
+    const closeButton = document.getElementById("add-book-form") as  HTMLInputElement;
+    closeButton.click();
+
 
     this.bookService.addBook(newFormData).subscribe(
+      (response: Books) => {
+        console.log(response);
+        this.getBooks();
+        newFormData.reset();
+
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error.message);
+      }
+    );
+  }
+
+  public onUpdateBook(books: Books): void {
+    console.log("books: " + books);
+
+    // const publishedDate = new Date(
+    //   addForm?.value?.publishedDate?.year,
+    //   addForm?.value?.publishedDate?.month -1,
+    //   addForm?.value?.publishedDate?.day
+    //   );
+
+    // const getFormData = {...addForm.value}
+    // const newFormData = {
+    //   ...getFormData,
+    //   publishedDate: publishedDate,
+    // }
+
+
+    this.bookService.updateBooks(books).subscribe(
       (response: Books) => {
         console.log(response);
         this.getBooks();
@@ -81,8 +112,21 @@ export class BooksComponent implements OnInit {
     );
   }
 
+
+  public onDeleteBooks(bookId: number): void {
+    this.bookService.deleteBooks(bookId).subscribe(
+      (response: void) => {
+        console.log(response);
+        this.getBooks();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
   public onOpenModal(book: Books, mode: string): void {
-    const container = document.getElementById('main-container') as HTMLElement;
+    const container = document.getElementById('main-container') as HTMLInputElement;
     const button = document.createElement("button");
     button.type = "button";
     button.style.display="none";
@@ -92,9 +136,13 @@ export class BooksComponent implements OnInit {
       button.setAttribute('data-bs-target', '#addBookModal');
     }
     if(mode === "edit") {
+      this.editBooks = book;
+      console.log(this.editBooks);
+
       button.setAttribute('data-bs-target', '#updateBookModal')
     }
     if(mode === "delete") {
+      this.deleteBooks = book;
       button.setAttribute('data-bs-target', '#deleteBookModal')
     }
 

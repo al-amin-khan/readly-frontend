@@ -17,7 +17,7 @@
 
   <div *ngFor="let book of books">
     <br>
-    <div class="card mb-3" id="main-container">
+    <div class="card mb-3"  id="main-container">
       <div class="row no-gutters">
         <div class="col-md-4">
           <div>
@@ -33,7 +33,9 @@
                   <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                 </svg>
               </button>
-              <button class="btn btn-danger" (click)="onOpenModal(book, 'delete')">
+              <button class="btn btn-danger"
+              type="button" data-bs-toggle="modal" data-bs-target="#deleteBookModal"
+              (click)="onOpenModal(book, 'delete')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                   <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
                 </svg>
@@ -142,59 +144,60 @@
 
 <!--Update Book Modal -->
 <div class="modal fade" id="updateBookModal" tabindex="-1"
-type="button" data-bs-toggle="modal" data-bs-target="#updateBookModal"
-aria-labelledby="addBookModalLabel" aria-hidden="true">
+aria-labelledby="updateBookModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Book</h1>
+        <h1 class="modal-title fs-5" id="updateBookModalLabel">Edit Book</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form #addForm="ngForm" (ngSubmit)="onAddBook(addForm)">
+        <form #editForm="ngForm">
+          <input type="hidden" ngModel="{{editBooks?.id}}" name="id" class="form-control" id="title">
+
           <div class="mb-2">
             <label for="title" class="form-label">Title</label>
-            <input ngModel name="title" type="text" class="form-control" id="title" placeholder="Book title">
+            <input ngModel="{{editBooks?.title}}" name="title" type="text" class="form-control" id="title" placeholder="Book title">
           </div>
 
           <div class="mb-2">
             <label for="author" class="form-label">Author</label>
-            <input ngModel name="author" type="text" class="form-control" id="author" placeholder="Author name">
+            <input ngModel="{{editBooks?.author}}" name="author" type="text" class="form-control" id="author" placeholder="Author name">
           </div>
 
           <div class="mb-2">
             <label for="genre" class="form-label">Genre</label>
-            <input ngModel name="genre" type="text" class="form-control" id="genre" placeholder="Book genre">
+            <input ngModel="{{editBooks?.genre}}" name="genre" type="text" class="form-control" id="genre" placeholder="Book genre">
           </div>
 
           <div class="mb-2">
             <label for="isbn" class="form-label">ISBN</label>
-            <input ngModel name="isbn" type="text" class="form-control" id="isbn" placeholder="Book ISBN No.">
+            <input ngModel="{{editBooks?.isbn}}" name="isbn" type="text" class="form-control" id="isbn" placeholder="Book ISBN No.">
           </div>
 
           <div class="mb-2">
             <label for="rating" class="form-label">Rating</label>
-            <input ngModel name="rating" type="text" class="form-control" id="rating" placeholder="Book rating">
+            <input ngModel="{{editBooks?.rating}}" name="rating" type="text" class="form-control" id="rating" placeholder="Book rating">
           </div>
 
           <div class="mb-2">
             <label for="pages" class="form-label">Page</label>
-            <input ngModel name="pages" type="text" class="form-control" id="pages" placeholder="Total number of pages">
+            <input ngModel="{{editBooks?.rating}}" name="pages" type="text" class="form-control" id="pages" placeholder="Total number of pages">
           </div>
 
           <div class="mb-2">
             <label for="language" class="form-label">Language</label>
-            <input ngModel name="language" type="text" class="form-control" id="language" placeholder="Total number of pages">
+            <input ngModel="{{editBooks?.language}}" name="language" type="text" class="form-control" id="language" placeholder="Total number of pages">
           </div>
 
           <div class="mb-2">
             <label for="publishedDate" class="form-label">Published Date</label>
             <div class="input-group">
               <input
-                ngModel
+                ngModel="{{editBooks?.publishedDate | date:'mediumDate'}}"
                 name="publishedDate"
                 class="form-control"
-                id="date"
+                id="publishedDate"
                 placeholder="yyyy-mm-dd"
                 ngbDatepicker
                 #d="ngbDatepicker"
@@ -210,17 +213,17 @@ aria-labelledby="addBookModalLabel" aria-hidden="true">
 
           <div class="mb-2">
             <label for="cover" class="form-label">Cover photo</label>
-            <input ngModel name="cover" (change)="onChange($event)" type="file" class="form-control" id="cover">
+            <input ngModel="{{editBooks?.cover}}" name="cover" (change)="onChange($event)" type="file" class="form-control" id="cover">
           </div>
 
           <div class="mb-2">
             <label for="description" class="form-label">Description</label>
-            <textarea ngModel name="description" class="form-control" id="description" rows="3"></textarea>
+            <textarea ngModel="{{editBooks?.description}}" name="description" class="form-control" id="description" rows="3"></textarea>
           </div>
 
           <div class="modal-footer">
-            <button type="button" id="update-book-form" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" (click)="onUpdateBook(editForm.value)">Save</button>
           </div>
         </form>
       </div>
@@ -235,14 +238,15 @@ aria-labelledby="addBookModalLabel" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Book</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+      </button>
       </div>
       <div class="modal-body">
-        ...
+        <p>Are you sure, want to delete this <strong>{{deleteBooks?.title}}</strong></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-danger" (click)="onDeleteBooks(deleteBooks.id)" data-bs-dismiss="modal">Yes</button>
       </div>
     </div>
   </div>

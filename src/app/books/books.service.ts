@@ -16,7 +16,7 @@ export class BooksService {
     return this.http.get(`${this.apiServerUrl}/books`)
   }
 
-  public Books addBook(books: Books): Observable<any> {
+  public addBook(books: Books): Observable<any> {
     return this.http.post(`${this.apiServerUrl}/books`, books, {
       // headers: {
       //   'Access-Control-Allow-Origin': *,
@@ -27,7 +27,12 @@ export class BooksService {
 
 
   public updateBooks(books: Books): Observable<Books> {
-    return this.http.put<Books>(`${this.apiServerUrl}/Books/{id}`, books);
+    return this.http.put<Books>(`${this.apiServerUrl}/books`, books);
+  }
+
+
+  public deleteBooks(bookId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/books/${bookId}`);
   }
 
 
