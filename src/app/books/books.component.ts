@@ -38,9 +38,6 @@ export class BooksComponent implements OnInit {
 
   public onChange(event: any){
     this.imageFile = (event.target.files[0]);
-    // const blobFile = new Blob([event.target.files[0]], {
-    //   type: 'application/pdf'
-    // });
     console.log(this.imageFile);
 
     let reader = new FileReader();
@@ -52,8 +49,21 @@ export class BooksComponent implements OnInit {
 
   }
 
+  public onUploadImage(): void {
+
+    const imageBlobFile = this.imageLink;
+
+    this.bookService.uploadBookCoverImage(imageBlobFile).subscribe(
+      (response:any) => {
+      console.log("response from subscribe:", response);
+    },
+
+    (error:any) => {
+      console.log("error from subscribe", error.message);
+    })
+  }
+
   public onAddBook(addForm: NgForm): void {
-    console.log(addForm);
 
     const publishedDate = new Date(
       addForm?.value?.publishedDate?.year,
@@ -85,8 +95,6 @@ export class BooksComponent implements OnInit {
   }
 
   public onUpdateBook(books: Books): void {
-    console.log("books: " + books);
-
     // const publishedDate = new Date(
     //   addForm?.value?.publishedDate?.year,
     //   addForm?.value?.publishedDate?.month -1,

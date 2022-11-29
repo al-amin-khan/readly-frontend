@@ -1,5 +1,14 @@
 <h1 class="text-center">My Books</h1>
 <hr>
+<div>
+  <form #imageForm="ngForm" (ngSubmit)="onUploadImage()">
+    <div class="form-group container">
+      <input (change)="onChange($event)" ngModel name="cover" type="file" class="form-control-file" id="exampleFormControlFile1">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+<hr>
 <br>
 <div class="container">
   <button
@@ -99,7 +108,7 @@
 
           <div class="mb-2">
             <label for="language" class="form-label">Language</label>
-            <input ngModel name="language" type="text" class="form-control" id="language" placeholder="Total number of pages">
+            <input ngModel name="language" type="text" class="form-control" id="language" placeholder="Language">
           </div>
 
           <div class="mb-2">

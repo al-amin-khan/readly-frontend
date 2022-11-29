@@ -17,17 +17,19 @@ export class BooksService {
   }
 
   public addBook(books: Books): Observable<any> {
-    return this.http.post(`${this.apiServerUrl}/books`, books, {
-      // headers: {
-      //   'Access-Control-Allow-Origin': *,
-      //   'Content-Type': 'multipart/form-data'
-      // }
-    });
+    return this.http.post(`${this.apiServerUrl}/books`, books, {});
+  }
+
+  public uploadBookCoverImage(coverImage: any): Observable<any> {
+    return this.http.post(`${this.apiServerUrl}/books/saveImage`, coverImage,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+    );
   }
 
 
+
   public updateBooks(books: Books): Observable<Books> {
-    return this.http.put<Books>(`${this.apiServerUrl}/books`, books);
+    return this.http.put<Books>(`${this.apiServerUrl}/books/update`, books);
   }
 
 
