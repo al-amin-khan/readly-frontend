@@ -1,14 +1,5 @@
 <h1 class="text-center">My Books</h1>
 <hr>
-<div>
-  <form #imageForm="ngForm" (ngSubmit)="onUploadImage()">
-    <div class="form-group container">
-      <input (change)="onChange($event)" ngModel name="cover" type="file" class="form-control-file" id="exampleFormControlFile1">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-  </form>
-</div>
-<hr>
 <br>
 <div class="container">
   <button
@@ -30,7 +21,7 @@
       <div class="row no-gutters">
         <div class="col-md-4">
           <div>
-            <img src={{book?.cover}} class="card-img" alt="image-{{book.title}}">
+            <img src="data:image/png;base64,{{book?.cover}}" class="card-img" height="auto" alt="image-{{book.title}}">
           </div>
           <div class="text-center mt-2">
             <div class="btn-group" role="group">

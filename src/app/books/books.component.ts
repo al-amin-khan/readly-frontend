@@ -64,6 +64,8 @@ export class BooksComponent implements OnInit {
   }
 
   public onAddBook(addForm: NgForm): void {
+    console.log(addForm.value);
+
 
     const publishedDate = new Date(
       addForm?.value?.publishedDate?.year,
