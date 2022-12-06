@@ -1,8 +1,7 @@
 import { formatDate, getLocaleDateFormat } from '@angular/common';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { Form, NgForm } from '@angular/forms';
 import { Books } from './books';
 import { BooksService } from './books.service';
 
@@ -39,85 +38,89 @@ export class BooksComponent implements OnInit {
   public onChange(event: any){
     this.imageFile = (event.target.files[0]);
     console.log(this.imageFile);
-
-    let reader = new FileReader();
-    reader.readAsDataURL(this.imageFile);
-    reader.onload = (event) => {
-      this.imageLink = reader.result;
-      console.log(this.imageLink);
-    };
-
-  }
-
-  public onUploadImage(): void {
-
-    const imageBlobFile = this.imageLink;
-
-    this.bookService.uploadBookCoverImage(imageBlobFile).subscribe(
-      (response:any) => {
-      console.log("response from subscribe:", response);
-    },
-
-    (error:any) => {
-      console.log("error from subscribe", error.message);
-    })
   }
 
   public onAddBook(addForm: NgForm): void {
     console.log(addForm.value);
 
+    const formValues = addForm.value;
 
     const publishedDate = new Date(
       addForm?.value?.publishedDate?.year,
       addForm?.value?.publishedDate?.month -1,
       addForm?.value?.publishedDate?.day
       );
+    console.log("publishedDate: ", publishedDate);
 
-    const getFormData = {...addForm.value}
-    const newFormData = {
-      ...getFormData,
-      publishedDate: publishedDate,
-    }
+
+    let formData = new FormData();
+    formData.append('title', formValues?.title);
+    formData.append('author', formValues?.author);
+    formData.append('rating', formValues?.rating);
+    formData.append('isbn', formValues?.isbn);
+    formData.append('description', formValues?.description);
+    formData.append('genre', formValues?.genre);
+    formData.append('publishedDate', publishedDate.toString());
+    formData.append('pages', formValues?.pages);
+    formData.append('language', formValues?.language);
+    formData.append('cover', this.imageFile);
+
 
     const closeButton = document.getElementById("add-book-form") as  HTMLInputElement;
     closeButton.click();
 
 
-    this.bookService.addBook(newFormData).subscribe(
-      (response: Books) => {
-        console.log(response);
-        this.getBooks();
-        newFormData.reset();
-
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.message);
+    this.bookService.addBook(formData).subscribe(
+      {
+        next: response => {
+          console.log("Add Book " + response);
+          this.getBooks();
+        },
+        error: response => {
+          console.log(response.error)
+        }
       }
     );
   }
 
   public onUpdateBook(books: Books): void {
-    // const publishedDate = new Date(
-    //   addForm?.value?.publishedDate?.year,
-    //   addForm?.value?.publishedDate?.month -1,
-    //   addForm?.value?.publishedDate?.day
-    //   );
+    console.log(books.cover);
 
-    // const getFormData = {...addForm.value}
-    // const newFormData = {
-    //   ...getFormData,
-    //   publishedDate: publishedDate,
-    // }
+    let updatedFormData = new FormData();
+    updatedFormData.append('title', books?.title);
+    updatedFormData.append('author', books?.author);
+    updatedFormData.append('rating', (books?.rating).toString());
+    updatedFormData.append('isbn', books?.isbn);
+    updatedFormData.append('description', books?.description);
+    updatedFormData.append('genre', books?.genre);
+    updatedFormData.append('publishedDate', (books?.publishedDate).toString());
+    updatedFormData.append('pages', (books?.pages).toString());
+    updatedFormData.append('language', books?.language);
+    // updatedFormData.append('cover', this.imageFile);
+
+    if(this.imageFile !== 'undefined'){
+      updatedFormData.append('cover', this.imageFile);
+    }
+    else{
+      updatedFormData.append('cover', books?.cover);
+    }
 
 
-    this.bookService.updateBooks(books).subscribe(
-      (response: Books) => {
-        console.log(response);
-        this.getBooks();
+    const formDataObj:any = {};
+    updatedFormData.forEach((value, key) => (formDataObj[key] = value));
+    console.log("FormObject: ",formDataObj);
 
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error.message);
+
+
+    this.bookService.updateBooks(updatedFormData).subscribe(
+      {
+        next: response => {
+          console.log("Update Book: " + response);
+          this.getBooks();
+        },
+        error: HttpErrorResponse => {
+          console.log(HttpErrorResponse.error)
+        }
       }
     );
   }

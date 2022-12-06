@@ -195,8 +195,10 @@ aria-labelledby="updateBookModalLabel" aria-hidden="true">
             <div class="input-group">
               <input
                 ngModel="{{editBooks?.publishedDate | date:'mediumDate'}}"
+                value="editBooks?.publishedDate | date:'mediumDate'"
                 name="publishedDate"
                 class="form-control"
+
                 id="publishedDate"
                 placeholder="yyyy-mm-dd"
                 ngbDatepicker
