@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { BooksService } from './books/books.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { FormsModule } from '@angular/forms';
     NgbModule,
     FormsModule,
   ],
-  providers: [BooksService],
+  providers: [BooksService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

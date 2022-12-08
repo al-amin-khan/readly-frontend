@@ -1,27 +1,36 @@
-import { formatDate, getLocaleDateFormat } from '@angular/common';
+import { DatePipe, formatDate, getLocaleDateFormat } from '@angular/common';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { Form, NgForm } from '@angular/forms';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
+import { environment } from 'src/environments/environment';
 import { Books } from './books';
 import { BooksService } from './books.service';
 
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
-  styleUrls: ['./books.component.css']
+  styleUrls: ['./books.component.css'],
+  providers: [DatePipe]
 })
+
+
 export class BooksComponent implements OnInit {
   // model: NgbDateStruct | undefined;
   public books: Books[] | undefined;
   public editBooks!: Books;
   public deleteBooks!: Books;
+  public apiPhotoURL: string = environment.apiPhotoUrl;
   public imageFile: any;
-  public imageLink: any;
 
 
 
-  constructor(private bookService: BooksService, private httpClient: HttpClient) {
-    // this.books = [];
+  constructor(
+    private bookService: BooksService,
+    private httpClient: HttpClient,
+    private parseFormatter: NgbDateParserFormatter
+    ) {
   }
 
   public getBooks(): void {
@@ -41,7 +50,7 @@ export class BooksComponent implements OnInit {
   }
 
   public onAddBook(addForm: NgForm): void {
-    console.log(addForm.value);
+    console.log("date:", addForm.value?.publishedDate );
 
     const formValues = addForm.value;
 
@@ -84,7 +93,7 @@ export class BooksComponent implements OnInit {
   }
 
   public onUpdateBook(books: Books): void {
-    console.log(books.cover);
+    console.log('-----', books);
 
     let updatedFormData = new FormData();
     updatedFormData.append('title', books?.title);
@@ -94,6 +103,7 @@ export class BooksComponent implements OnInit {
     updatedFormData.append('description', books?.description);
     updatedFormData.append('genre', books?.genre);
     updatedFormData.append('publishedDate', (books?.publishedDate).toString());
+    // updatedFormData.append('publishedDate', );
     updatedFormData.append('pages', (books?.pages).toString());
     updatedFormData.append('language', books?.language);
     // updatedFormData.append('cover', this.imageFile);
