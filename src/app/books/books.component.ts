@@ -2,8 +2,7 @@ import { DatePipe, formatDate, getLocaleDateFormat } from '@angular/common';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { Form, NgForm } from '@angular/forms';
-import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
+import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { Books } from './books';
 import { BooksService } from './books.service';
@@ -23,6 +22,7 @@ export class BooksComponent implements OnInit {
   public deleteBooks!: Books;
   public apiPhotoURL: string = environment.apiPhotoUrl;
   public imageFile: any;
+  public editedPubDate!: NgbDateStruct;
 
 
 
@@ -34,14 +34,14 @@ export class BooksComponent implements OnInit {
   }
 
   public getBooks(): void {
-    this.bookService.getBooks().subscribe(
-      (response: Books[]) => {
+    this.bookService.getBooks().subscribe({
+      next: (response: Books[]) => {
         this.books = response;
       },
-      (error: HttpErrorResponse) =>{
+      error: (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    )
+    })
   }
 
   public onChange(event: any){
@@ -50,8 +50,6 @@ export class BooksComponent implements OnInit {
   }
 
   public onAddBook(addForm: NgForm): void {
-    console.log("date:", addForm.value?.publishedDate );
-
     const formValues = addForm.value;
 
     const publishedDate = new Date(
@@ -59,8 +57,6 @@ export class BooksComponent implements OnInit {
       addForm?.value?.publishedDate?.month -1,
       addForm?.value?.publishedDate?.day
       );
-    console.log("publishedDate: ", publishedDate);
-
 
     let formData = new FormData();
     formData.append('title', formValues?.title);
@@ -92,8 +88,12 @@ export class BooksComponent implements OnInit {
     );
   }
 
+
   public onUpdateBook(books: Books): void {
-    console.log('-----', books);
+    console.log(books);
+    const date = books.publishedDate;
+
+    // this.editedPubDate = new Date(books?.publishedDate);
 
     let updatedFormData = new FormData();
     updatedFormData.append('title', books?.title);
@@ -106,20 +106,12 @@ export class BooksComponent implements OnInit {
     // updatedFormData.append('publishedDate', );
     updatedFormData.append('pages', (books?.pages).toString());
     updatedFormData.append('language', books?.language);
-    // updatedFormData.append('cover', this.imageFile);
-
-    if(this.imageFile !== 'undefined'){
-      updatedFormData.append('cover', this.imageFile);
-    }
-    else{
-      updatedFormData.append('cover', books?.cover);
-    }
+    updatedFormData.append('cover', this.imageFile);
 
 
     const formDataObj:any = {};
     updatedFormData.forEach((value, key) => (formDataObj[key] = value));
     console.log("FormObject: ",formDataObj);
-
 
 
     this.bookService.updateBooks(updatedFormData).subscribe(
@@ -137,16 +129,17 @@ export class BooksComponent implements OnInit {
 
 
   public onDeleteBooks(bookId: number): void {
-    this.bookService.deleteBooks(bookId).subscribe(
-      (response: void) => {
+    this.bookService.deleteBooks(bookId).subscribe({
+      next: (response: void) => {
         console.log(response);
         this.getBooks();
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         alert(error.message);
       }
-    );
+    });
   }
+
 
   public onOpenModal(book: Books, mode: string): void {
     const container = document.getElementById('main-container') as HTMLInputElement;
@@ -161,7 +154,6 @@ export class BooksComponent implements OnInit {
     if(mode === "edit") {
       this.editBooks = book;
       console.log(this.editBooks);
-
       button.setAttribute('data-bs-target', '#updateBookModal')
     }
     if(mode === "delete") {

@@ -194,11 +194,19 @@ aria-labelledby="updateBookModalLabel" aria-hidden="true">
           <div class="mb-2">
             <label for="editedPublishedDate" class="form-label">Published Date</label>
             <div class="input-group">
-              <input
+              <!-- <input
                 ngModel="{{editBooks?.publishedDate | date:'mediumDate'}}"
                 name="editedPublishedDate"
                 class="form-control"
-
+                id="editedPublishedDate"
+                placeholder="yyyy-mm-dd"
+                ngbDatepicker
+                #d2="ngbDatepicker"
+              /> -->
+              <input
+                [(ngModel)] = "editedPubDate"
+                name="editedPublishedDate"
+                class="form-control"
                 id="editedPublishedDate"
                 placeholder="yyyy-mm-dd"
                 ngbDatepicker
