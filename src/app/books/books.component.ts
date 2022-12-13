@@ -1,8 +1,8 @@
-import { DatePipe, formatDate, getLocaleDateFormat } from '@angular/common';
+import { DatePipe} from '@angular/common';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { Form, NgForm } from '@angular/forms';
-import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit} from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { Books } from './books';
 import { BooksService } from './books.service';
@@ -16,20 +16,21 @@ import { BooksService } from './books.service';
 
 
 export class BooksComponent implements OnInit {
-  // model: NgbDateStruct | undefined;
+
   public books: Books[] | undefined;
   public editBooks!: Books;
   public deleteBooks!: Books;
   public apiPhotoURL: string = environment.apiPhotoUrl;
   public imageFile: any;
-  public editedPubDate!: NgbDateStruct;
+  public editedPubDate!:any;
 
 
 
   constructor(
     private bookService: BooksService,
     private httpClient: HttpClient,
-    private parseFormatter: NgbDateParserFormatter
+    private parseFormatter: NgbDateParserFormatter,
+    private datePipe: DatePipe,
     ) {
   }
 
@@ -48,6 +49,12 @@ export class BooksComponent implements OnInit {
     this.imageFile = (event.target.files[0]);
     console.log(this.imageFile);
   }
+
+  public onLoadDate(event: any){
+    const changeDate = (event.target);
+    console.log({changeDate});
+  }
+
 
   public onAddBook(addForm: NgForm): void {
     const formValues = addForm.value;
@@ -90,10 +97,23 @@ export class BooksComponent implements OnInit {
 
 
   public onUpdateBook(books: Books): void {
-    console.log(books);
-    const date = books.publishedDate;
+    console.log({books});
+    const originalDate = books?.publishedDate;
+    const parseDate = parseInt(originalDate.toString());
 
+    const newDate = new Date(parseDate);
+    // const dateToNgb = {
+    //   year: newDate.getUTCFullYear(),
+    //   month: newDate.getMonth() + 1,
+    //   day: newDate.getDate()
+    // };
+    // this.editedPubDate = dateToNgb;
+    // console.log(this.editedPubDate.year+'-'+this.editedPubDate.month+'-'+this.editedPubDate.day);
     // this.editedPubDate = new Date(books?.publishedDate);
+
+    this.editedPubDate = this.datePipe.transform(newDate, "yyyy-MM-dd");
+    // this.editedPubDate = temp;
+    // console.log('from ngModel: ',temp);
 
     let updatedFormData = new FormData();
     updatedFormData.append('title', books?.title);
@@ -102,7 +122,7 @@ export class BooksComponent implements OnInit {
     updatedFormData.append('isbn', books?.isbn);
     updatedFormData.append('description', books?.description);
     updatedFormData.append('genre', books?.genre);
-    updatedFormData.append('publishedDate', (books?.publishedDate).toString());
+    updatedFormData.append('publishedDate', books?.publishedDate.toString());
     // updatedFormData.append('publishedDate', );
     updatedFormData.append('pages', (books?.pages).toString());
     updatedFormData.append('language', books?.language);
