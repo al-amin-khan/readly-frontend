@@ -17,12 +17,13 @@ import { BooksService } from './books.service';
 
 export class BooksComponent implements OnInit {
 
-  public books: Books[] | undefined;
+  public books!: Books[];
   public editBooks!: Books;
   public deleteBooks!: Books;
   public apiPhotoURL: string = environment.apiPhotoUrl;
   public imageFile: any;
   public editedPubDate!:any;
+
 
 
 
@@ -51,19 +52,33 @@ export class BooksComponent implements OnInit {
   }
 
   public onLoadDate(event: any){
-    const changeDate = (event.target);
+    const changeDate = (event.target.value);
     console.log({changeDate});
   }
 
 
   public onAddBook(addForm: NgForm): void {
     const formValues = addForm.value;
+    console.log(formValues.publishedDate);
 
-    const publishedDate = new Date(
-      addForm?.value?.publishedDate?.year,
-      addForm?.value?.publishedDate?.month -1,
-      addForm?.value?.publishedDate?.day
-      );
+
+    // const publishedDate = new Date(
+    //   addForm?.value?.publishedDate?.year,
+    //   addForm?.value?.publishedDate?.month -1,
+    //   addForm?.value?.publishedDate?.day
+    //   );
+
+      // const publishedDate: any = "
+      //   addForm?.value?.publishedDate?.year,
+      //   addForm?.value?.publishedDate?.month,
+      //   addForm?.value?.publishedDate?.day
+      // ";
+
+      const publishedDate: any = `${addForm?.value?.publishedDate?.year}-${addForm?.value?.publishedDate?.month}-${addForm?.value?.publishedDate?.day}`;
+
+      console.log(publishedDate);
+      console.log({date : publishedDate});
+
 
     let formData = new FormData();
     formData.append('title', formValues?.title);
@@ -72,7 +87,7 @@ export class BooksComponent implements OnInit {
     formData.append('isbn', formValues?.isbn);
     formData.append('description', formValues?.description);
     formData.append('genre', formValues?.genre);
-    formData.append('publishedDate', publishedDate.toString());
+    formData.append('publishedDate', publishedDate);
     formData.append('pages', formValues?.pages);
     formData.append('language', formValues?.language);
     formData.append('cover', this.imageFile);
@@ -97,11 +112,14 @@ export class BooksComponent implements OnInit {
 
 
   public onUpdateBook(books: Books): void {
-    console.log({books});
-    const originalDate = books?.publishedDate;
-    const parseDate = parseInt(originalDate.toString());
+    // console.log({pubDate: (<HTMLInputElement>document.getElementById("publishedDate")).value});
+    // const originalDate = books?.publishedDate.split(',');
+    // const formateDate = originalDate[0] + '-' + originalDate[1] + '-' + originalDate[2];
+    // this.editedPubDate = formateDate;
 
-    const newDate = new Date(parseDate);
+    // const parseDate = parseInt(originalDate.toString());
+
+    // const newDate = new Date(parseDate);
     // const dateToNgb = {
     //   year: newDate.getUTCFullYear(),
     //   month: newDate.getMonth() + 1,
@@ -111,7 +129,7 @@ export class BooksComponent implements OnInit {
     // console.log(this.editedPubDate.year+'-'+this.editedPubDate.month+'-'+this.editedPubDate.day);
     // this.editedPubDate = new Date(books?.publishedDate);
 
-    this.editedPubDate = this.datePipe.transform(newDate, "yyyy-MM-dd");
+    // this.editedPubDate = this.datePipe.transform(formateDate, "yyyy-MM-dd");
     // this.editedPubDate = temp;
     // console.log('from ngModel: ',temp);
 
@@ -122,8 +140,8 @@ export class BooksComponent implements OnInit {
     updatedFormData.append('isbn', books?.isbn);
     updatedFormData.append('description', books?.description);
     updatedFormData.append('genre', books?.genre);
-    updatedFormData.append('publishedDate', books?.publishedDate.toString());
-    // updatedFormData.append('publishedDate', );
+    // updatedFormData.append('publishedDate', books?.publishedDate.toLocaleString());
+    updatedFormData.append('publishedDate', this.editedPubDate);
     updatedFormData.append('pages', (books?.pages).toString());
     updatedFormData.append('language', books?.language);
     updatedFormData.append('cover', this.imageFile);
@@ -173,7 +191,13 @@ export class BooksComponent implements OnInit {
     }
     if(mode === "edit") {
       this.editBooks = book;
-      console.log(this.editBooks);
+      console.log('from modal open:', this.editBooks);
+      const date = this.editBooks?.publishedDate;
+      const formateDate = `${date[0]}-${date[1]}-${date[2]}`;
+      console.log(formateDate);
+      this.editedPubDate = formateDate;
+
+
       button.setAttribute('data-bs-target', '#updateBookModal')
     }
     if(mode === "delete") {

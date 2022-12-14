@@ -183,7 +183,7 @@ aria-labelledby="updateBookModalLabel" aria-hidden="true">
 
           <div class="mb-2">
             <label for="pages" class="form-label">Page</label>
-            <input ngModel="{{editBooks?.rating}}" name="pages" type="text" class="form-control" id="pages" placeholder="Total number of pages">
+            <input ngModel="{{editBooks?.pages}}" name="pages" type="text" class="form-control" id="pages" placeholder="Total number of pages">
           </div>
 
           <div class="mb-2">
@@ -204,8 +204,8 @@ aria-labelledby="updateBookModalLabel" aria-hidden="true">
                 #d2="ngbDatepicker"
               /> -->
               <input
-                ngModel = "{{editBooks?.publishedDate}}"
-                [value]= 'editedPubDate'
+                ngModel = ""
+                [value] = "editedPubDate"
                 name="publishedDate"
                 class="form-control"
                 id="publishedDate"

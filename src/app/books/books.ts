@@ -1,3 +1,5 @@
+import { NgbDate } from "@ng-bootstrap/ng-bootstrap";
+
 export interface Books{
   id:number;
   title: string;
@@ -9,6 +11,6 @@ export interface Books{
   rating: number;
   description: string;
   pages: number;
-  publishedDate: Date;
+  publishedDate: any;
   language: string
 }
