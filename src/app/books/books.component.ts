@@ -23,6 +23,7 @@ export class BooksComponent implements OnInit {
   public apiPhotoURL: string = environment.apiPhotoUrl;
   public imageFile: any;
   public editedPubDate!:any;
+  public searchBooks!: any;
 
 
 
@@ -176,6 +177,21 @@ export class BooksComponent implements OnInit {
         alert(error.message);
       }
     });
+  }
+
+  public onSearchBooks(title: any){
+    console.log("accessing search");
+
+    this.bookService.searchBooks(title).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.searchBooks = response;
+        this.books = response;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error.message);
+      }
+    })
   }
 
 

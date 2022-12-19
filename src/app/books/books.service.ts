@@ -32,4 +32,9 @@ export class BooksService {
   }
 
 
+  public searchBooks(title: String): Observable<any> {
+    return this.http.get<any>(`${this.apiServerUrl}/books/findByTitle/${title}`);
+  }
+
+
 }

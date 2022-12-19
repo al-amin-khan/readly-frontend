@@ -1,4 +1,11 @@
-<h1 class="text-center">My Books</h1>
+<nav class="navbar bg-light">
+  <div class="container">
+    <a class="navbar-brand">Readly</a>
+    <form class="d-flex" role="search">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" (ngModelChange)="onSearchBooks($event)" ngModel name="searchBooks">
+    </form>
+  </div>
+</nav>
 <hr>
 <br>
 <div class="container">
